@@ -1,1 +1,17 @@
 peble - small, quick booting OS
+
+= Features =
+* Enlightenment (E17) desktop environment
+* Opera 11 browser with flashplayer plugin
+* quick boot (~12s in Virtualbox, ~25s on netbook from USB)
+* small size (image is only 61MB)
+* partial support for apt-get package manager (experimental)
+* using mkxpud script (github.com/penk/mkxpud) to build OS
+
+= Planned features =
+* better hardware support
+* installation to hard drive
+* saving changes to USB or HDD
+
+= How to build peble? =
+(coming soon)
