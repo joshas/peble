@@ -1,0 +1,24 @@
+# recipe file
+
+[name]
+sound
+
+[package]
+alsa-base
+alsa-utils
+
+[binary]
+/usr/bin/alsamixer
+/usr/bin/amixer
+#/usr/bin/aplay
+
+[data]
+/usr/share/alsa
+/usr/share/alsa-base
+/usr/lib/alsa-lib
+
+[overwrite]
+/etc/asound.conf
+/usr/share/alsa/alsa.conf
+
+#/etc/pulse (fix?)

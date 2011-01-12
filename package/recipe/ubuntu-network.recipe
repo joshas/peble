@@ -1,0 +1,54 @@
+# recipe file
+
+[name]
+network
+
+[package]
+iptables
+wpasupplicant
+wireless-tools
+
+[action]
+# extract connman
+tar jxf skeleton/archive/connman-0.64.tar.bz2 -C $MKXPUD_TARGET;
+mkdir -p $MKXPUD_TARGET/var/lock;
+
+[binary]
+#/usr/bin/ssh
+
+/sbin/iwconfig
+/sbin/iwevent
+/sbin/iwgetid
+/sbin/iwlist
+/sbin/iwpriv
+/sbin/iwspy
+
+/sbin/wpa_action
+/sbin/wpa_cli
+/sbin/wpa_supplicant
+/usr/bin/wpa_passphrase
+
+#/sbin/iptables
+#/sbin/iptables-save
+#/sbin/iptables-restore
+#/sbin/iptables-xml
+
+[data]
+/etc/resolv.conf
+/etc/protocols
+/etc/services
+/etc/rpc
+#/lib/iptables
+
+/lib/firmware/iwlwifi-3945-2.ucode
+/lib/firmware/iwlwifi-4965-2.ucode
+/lib/firmware/iwlwifi-5000-1.ucode
+/lib/firmware/iwlwifi-5000-2.ucode
+
+/etc/dbus-1/system.d/wpa_supplicant.conf
+
+[overwrite]
+/etc/hosts
+/etc/nsswitch.conf
+/etc/networks
+/etc/shadow

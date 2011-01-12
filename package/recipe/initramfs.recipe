@@ -1,0 +1,20 @@
+# initramfs recipe
+
+[name]
+initramfs
+
+[package]
+# busybox-initramfs*
+busybox-static
+
+[action]
+sudo tar zxf skeleton/archive/dev.tgz -C working/$MKXPUD_CODENAME/initramfs/
+
+[binary]
+#/bin/busybox
+/bin/mount
+
+[data]
+
+[overwrite]
+/bin/busybox

@@ -1,0 +1,24 @@
+# recipe file
+
+[name]
+chromium
+
+[package]
+
+[action]
+# download chromium
+if [ ! -e skeleton/archive/chrome-linux.zip ]; then wget http://build.chromium.org/buildbot/snapshots/chromium-rel-linux/LATEST; wget http://build.chromium.org/buildbot/snapshots/chromium-rel-linux/`cat LATEST`/chrome-linux.zip -P skeleton/archive/; rm LATEST; fi; 
+unzip skeleton/archive/chrome-linux.zip -d $MKXPUD_TARGET/usr/share/;
+# download flash player
+if [ ! -e skeleton/archive/install_flash_player_10_linux.tar.gz ]; then wget http://fpdownload.macromedia.com/get/flashplayer/current/install_flash_player_10_linux.tar.gz -P skeleton/archive/; fi;
+mkdir -p $MKXPUD_TARGET/usr/share/mozilla/plugins/;
+tar xzf skeleton/archive/install_flash_player_10_linux.tar.gz -C $MKXPUD_TARGET/usr/share/mozilla/plugins/; 
+
+[binary]
+
+[data]
+
+[overwrite]
+# TODO: chromium desktop and menu icons
+# TODO: default chromium config
+

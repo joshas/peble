@@ -1,0 +1,57 @@
+#!/bin/bash
+# load kernel modules, default name "xpud-`uname -r`-mod.tgz", gzipped tarball
+# load_module [<path>]
+
+# disable hotplug 
+rm -f /sbin/hotplug
+
+if [ -z $1 ]; then
+
+	for p in `ls /mnt/`; do 
+		MODULE=/mnt/$p/xpud-`uname -r`-mod.tgz
+		if [ -e $MODULE ]; then
+			tar zxf $MODULE -C /
+		fi
+	done
+else
+	if [ -e $1 ]; then
+		tar zxf $1 -C /
+	fi
+fi
+
+# load kernel modules by udev
+depmod -a
+udevadm trigger 
+
+# work through NIC and wake them up
+for NIC in eth0 eth1 eth2 wlan0 ath0 ra0; do
+	/bin/ifconfig $NIC up
+	/sbin/iwconfig $NIC mode Managed
+done
+
+# get wireless SSID list
+/usr/local/bin/get_ssid &
+
+# setup sound channel
+CARD=`grep '0 \[' /proc/asound/cards | cut -d'[' -f2| cut -d']' -f1`
+if [ ! -z $CARD ]; then 
+sed -e "s/Intel/$CARD/g" /etc/asound.conf > /etc/asound.conf.tmp
+mv /etc/asound.conf.tmp /etc/asound.conf
+for channel in Master Front PCM; do
+	/usr/bin/amixer set $channel 95% on
+done
+fi
+
+# mount all partitions
+for i in `fdisk -l | grep "^/dev" | cut -d' ' -f1`; do
+   mkdir -p /mnt/`basename $i`;
+   mount $i /mnt/`basename $i`;
+done
+
+# add these modules into backup list
+if [ ! "$(cat /etc/xpud-backup.conf | grep /lib/modules )" ]; then
+/usr/local/bin/get_mod_list >> /etc/xpud-backup.conf
+fi
+
+# then enable hotplug again
+cp /sbin/hotplug-x /sbin/hotplug

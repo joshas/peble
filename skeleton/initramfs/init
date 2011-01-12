@@ -1,0 +1,92 @@
+#!/bin/sh
+export PATH="/sbin:/bin"
+
+# mounting procfs
+mkdir /proc
+mount -t proc proc /proc
+
+# mounting sysfs
+mkdir /sys
+mount -t sysfs sysfs /sys 
+
+for x in $(cat /proc/cmdline); do
+	case $x in
+		overlay=*)
+			export ROOT=${x#overlay=}
+		;;
+	esac
+done
+
+mount -o loop /opt/rootfs.sqf /ro
+
+# scan local devices for the overlay image
+if [ ! -z $ROOT ]; then
+	i=0
+	while [ "$i" -lt 60 ]; do
+		if [ -e /sys/block/"${ROOT}"/"${ROOT}"1 ]; then
+			break
+		fi
+	/bin/busybox sleep 1
+	i="$(($i + 1))"
+	done
+	mkdir -p /root
+	mount /dev/"${ROOT}"1 /root
+	if [ -e /root/overlay.img ]; then 
+		mount -o loop /root/overlay.img /rw
+	else 
+		mount -t tmpfs tmpfs /rw
+	fi
+else
+	mount -t tmpfs tmpfs /rw
+fi
+
+mount -t aufs -o br=/rw:/ro=ro none /newroot
+
+# check if we have free loop device available
+LOOPS_USED=`/bin/busybox losetup | /bin/busybox wc -l`
+LOOPS_NUM=`ls /opt/*.opt | /bin/busybox wc -l`
+LOOPS_NUM=$(($LOOPS_NUM + 8))
+while [ $LOOPS_USED -le $LOOPS_NUM ]; do
+	if [ ! -e /dev/loop$LOOPS_USED ]; then
+		# create new loop device
+		/bin/busybox mknod -m660 /dev/loop$LOOPS_USED b 7 $LOOPS_USED
+	fi
+	LOOPS_USED=$(($LOOPS_USED + 1))
+done
+
+for o in `find /opt -name *.opt`; do
+	if [ -e ${o} ]; then
+	mkdir -p ${o}.d
+	mount -o loop ${o} ${o}.d 
+	mount -o remount,append:${o}.d /newroot
+	# moving optfs into new aufs filesystem
+	mkdir -p /newroot/roopt/${o}.d
+	mount --move ${o}.d /newroot/roopt/${o}.d
+	fi
+done
+
+# moving procfs into new aufs filesystem
+mkdir -p /newroot/proc
+mount --move /proc /newroot/proc
+
+# moving sysfs into new aufs filesystem
+mkdir -p /newroot/sys
+mount --move /sys /newroot/sys
+
+# moving readonly into new aufs filesystem
+mkdir -p /newroot/rofs
+mount --move /ro /newroot/rofs
+
+# moving readwrite into new aufs filesystem
+mkdir -p /newroot/cow
+mount --move /rw /newroot/cow
+
+# change root!
+if [ ! "$(cat /newroot/proc/cmdline | grep debug )" ]; then
+	# move busybox link to new aufs filesystem 
+	/bin/busybox mv /bin/busybox /newroot/bin/
+	exec /newroot/bin/busybox chroot /newroot /sbin/init
+else
+	/bin/busybox cp /bin/busybox /newroot/bin
+	/bin/sh
+fi

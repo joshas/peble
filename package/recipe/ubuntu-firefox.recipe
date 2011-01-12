@@ -1,0 +1,29 @@
+# recipe file
+
+[name]
+firefox
+
+[package]
+
+[action]
+# download firefox
+if [ ! -e skeleton/archive/firefox-4.0b8.tar.bz2 ]; then wget http://releases.mozilla.org/pub/mozilla.org/firefox/releases/4.0b8/linux-i686/en-US/firefox-4.0b8.tar.bz2 -P skeleton/archive/; fi; 
+tar jxf skeleton/archive/firefox-4.0b8.tar.bz2 -C $MKXPUD_TARGET/usr/share/;
+# FIXME: remove firefox updater and components
+rm -f $MKXPUD_TARGET/usr/share/firefox/updater;
+rm -f $MKXPUD_TARGET/usr/share/firefox/crashreporter;
+rm -f $MKXPUD_TARGET/usr/share/firefox/components/libmozgnome.so;
+rm -f $MKXPUD_TARGET/usr/share/firefox/components/libnkgnomevfs.so;
+# download flash player
+if [ ! -e skeleton/archive/install_flash_player_10_linux.tar.gz ]; then wget http://fpdownload.macromedia.com/get/flashplayer/current/install_flash_player_10_linux.tar.gz -P skeleton/archive/; fi;
+mkdir -p $MKXPUD_TARGET/usr/share/mozilla/plugins/;
+tar xzf skeleton/archive/install_flash_player_10_linux.tar.gz -C $MKXPUD_TARGET/usr/share/mozilla/plugins/; 
+
+[binary]
+
+[data]
+
+[overwrite]
+# TODO: firefox desktop and menu icons
+# TODO: default firefox config
+

@@ -1,0 +1,47 @@
+# recipe file
+
+[name]
+opera
+
+[package]
+# packages required for flashplugin
+libnss3-1d
+libnspr4-0d
+
+[action]
+
+# download opera
+if [ ! -e skeleton/temp/opera_11.00.1156_i386.deb ]; then wget http://get1.opera.com/pub/opera/linux/1100/opera_11.00.1156_i386.deb -P skeleton/temp/; dpkg -x skeleton/temp/opera_11.00.1156_i386.deb / ; fi;
+# download flash player
+if [ ! -e skeleton/temp/install_flash_player_10_linux.tar.gz ]; then wget http://fpdownload.macromedia.com/get/flashplayer/current/install_flash_player_10_linux.tar.gz -P skeleton/temp/; tar xzf skeleton/temp/install_flash_player_10_linux.tar.gz -C /usr/lib/opera/plugins/ ; fi;
+
+[binary]
+/usr/bin/opera
+
+[data]
+/usr/lib/opera
+/usr/share/applications/opera-browser.desktop
+/usr/share/menu/opera
+/usr/share/pixmaps/opera-browser.xpm
+
+/usr/share/opera/defaults
+/usr/share/opera/extra
+/usr/share/opera/locale/en
+/usr/share/opera/package
+/usr/share/opera/skin
+/usr/share/opera/styles
+/usr/share/opera/ui
+/usr/share/opera/unite
+/usr/share/opera/encoding.bin
+/usr/share/opera/html40_entities.dtd
+/usr/share/opera/lngcode.txt
+/usr/share/opera/mathml.dtd
+/usr/share/opera/package-id.ini
+
+/usr/share/opera/locale/lt/
+
+/usr/share/doc/opera/copyright
+
+[overwrite]
+/root/.opera/
+

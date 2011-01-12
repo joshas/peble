@@ -1,0 +1,31 @@
+# recipe file
+
+[name]
+artwork
+
+[package]
+dmz-cursor-theme
+human-icon-theme
+libgtk2.0-bin
+#faenza-icon-theme
+
+[action]
+# add-apt-repository ppa:tiheum/equinox
+sudo gtk-update-icon-cache -f /usr/share/icons/Human
+
+[binary]
+
+[data]
+
+/usr/share/icons/Human/
+
+/usr/share/icons/hicolor/
+
+/usr/share/icons/DMZ-White
+/etc/alternatives/x-cursor-theme
+/usr/share/icons/default/index.theme
+
+/usr/lib/gdk-pixbuf-2.0/
+
+[overwrite]
+

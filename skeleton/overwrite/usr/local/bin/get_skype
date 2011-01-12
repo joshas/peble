@@ -1,0 +1,23 @@
+#!/bin/bash -e
+# done by probono 
+# http://klik.atekon.de/wiki/index.php/CustomizeXPUDLive
+
+cd /tmp/
+
+# Install Skype
+wget "http://www.skype.com/go/getskype-linux-beta-static" -O skype_static-tmp.tar.bz2
+tar xjvf skype_static-*.tar.bz2
+rm skype_static-*.tar.bz2
+mkdir -p /opt # || echo "/opt already exists"
+mv skype_static-*/ /opt/
+find /opt -name skype -exec ln -s {} /usr/bin/ \;
+
+echo "Skype has been installed successfully."
+
+cd -
+
+# create custom .desktop file and symlink to icon
+echo -e "[Desktop Entry]\nName=Skype\nGenericName=Internet Telephony\nType=AppPopup" > /usr/share/applications/skype.desktop
+ln -s /opt/skype*/icons/SkypeBlue_48x48.png /usr/share/plate/chrome/content/image/skype.png
+
+update-menus

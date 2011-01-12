@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# /etc/X11/xinit/xinitrc
+#
+# global xinitrc file, used by all X sessions started by xinit (startx)
+
+# invoke global X session script
+#. /etc/X11/Xsession
+
+/usr/local/bin/post-boot.sh 1> /tmp/init.log 2> /tmp/init.err &
+/usr/sbin/acpid &
+exec ck-launch-session /usr/bin/enlightenment_start
+

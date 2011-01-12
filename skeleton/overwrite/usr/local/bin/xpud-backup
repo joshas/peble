@@ -1,0 +1,37 @@
+#!/bin/bash
+# xpud-backup <path> [-p|-r|-s]
+
+if [ -d $1 ]; then
+
+BCKDIR=${1}/xpud-backup
+OPTDIR=${1}/xpud-backup/opt
+
+
+# create backup directory
+mkdir -p ${BCKDIR}
+
+# create opt backup directory
+mkdir -p ${OPTDIR}
+
+cd /cow
+find . | grep -v "/dev" | grep -v "/mnt" | grep -v "/roopt" | grep -v "/tmp" | grep -v "/var" | grep -v "/.xpud" | cpio -H newc -o | gzip -9 > ${BCKDIR}/xpud-data.gz
+cd -
+
+if [ -d ${OPTDIR} ] && [ -e /opt/*.opt ]; then cp -apf /opt/*.opt ${OPTDIR}; fi
+
+# if additional parameter was passed - poweroff or reboot
+case "$2" in
+	'-p')
+		#poweroff -f;
+		poweroff;
+	;;
+	'-r')
+		#reboot -f;
+		reboot;
+	;;
+	'-s')
+		boot-to-win;
+	;;
+esac
+
+fi

@@ -1,0 +1,27 @@
+# HDD installation recipe
+
+[name]
+installer
+
+[package]
+#os-prober
+#parted
+#grub
+
+[binary]
+#/sbin/cfdisk
+#/sbin/parted
+#/usr/bin/os-prober
+#/usr/sbin/grub
+#/usr/sbin/grub-set-default
+
+[data]
+#/usr/share/os-prober
+#/usr/lib/linux-boot-probes
+#/usr/lib/os-probes
+#/usr/lib/grub
+
+[overwrite]
+#/var/lib/os-prober
+
+#/usr/local/bin/install-to-hdd

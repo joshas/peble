@@ -1,0 +1,30 @@
+#!/bin/bash -e
+# by penk
+# get codecs from medibuntu
+# use at your own risk
+
+cd /tmp
+
+wget "http://packages.medibuntu.org/pool/non-free/w/w32codecs/w32codecs_20071007-0medibuntu3_i386.deb"
+ar p w32codecs*.deb data.tar.gz | zcat | tar xv
+rm -rf w32codecs*.deb
+
+wget "http://packages.medibuntu.org/pool/free/libd/libdvdcss/libdvdcss2_1.2.10-0.2medibuntu1_i386.deb"
+ar p libdvdcss*.deb data.tar.gz | zcat | tar xv
+rm -rf libdvdcss*.deb
+
+wget "http://mirrors.kernel.org/ubuntu/pool/multiverse/g/gecko-mediaplayer/gecko-mediaplayer_0.9.8-1ubuntu1_i386.deb"
+ar p gecko-mediaplayer*.deb data.tar.gz | zcat | tar xv
+rm -rf gecko-mediaplayer*.deb
+
+cp -a ./usr/lib /usr
+cp -a ./usr/share/gconf /usr/share
+rm -rf /tmp/usr/
+
+cd -
+
+echo "/usr/lib/codecs" >> /etc/xpud-backup.conf
+echo "/usr/lib/win32" >> /etc/xpud-backup.conf
+echo "/usr/lib/libdvdcss.so.2" >> /etc/xpud-backup.conf
+echo "/usr/lib/libdvdcss.so.2.1.0" >> /etc/xpud-backup.conf
+echo "/usr/share/gconf/schemas/gecko-mediaplayer.schemas" >> /etc/xpud-backup.conf
